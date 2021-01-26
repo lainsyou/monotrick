@@ -5,7 +5,9 @@
       <br />
       <span>見える画像の白部分に、見えない画像を表示します。</span>
       <br />
-      <span>見える画像の白部分がない場合は、見えない画像は表示されません。</span>
+      <span
+        >見える画像の白部分がない場合は、見えない画像は表示されません。</span
+      >
       <br />
 
       <span>見える画像：</span>
@@ -22,13 +24,20 @@
 
       <br />
 
-      <span>ダウンロード：</span>
-      <v-btn icon @click="download">
+      <span>ダウンロード</span>
+      <br /><span style="padding-left: 10px">クレースケール：</span>
+      <v-btn icon @click="download(true)">
+        <v-icon x-large>mdi-download</v-icon>
+      </v-btn>
+      <br /><span style="padding-left: 10px">色を残す：</span>
+      <v-btn icon @click="download(false)">
         <v-icon x-large>mdi-download</v-icon>
       </v-btn>
 
       <div style="background-color: gray">
-        <span style="color:white;font-weight:bold;">見えるときのサンプル</span>
+        <span style="color: white; font-weight: bold"
+          >見えるときのサンプル</span
+        >
         <br />
         <canvas id="canvas" height="1024" width="1024"></canvas>
       </div>
@@ -131,7 +140,7 @@ export default class App extends Vue {
   /**
    * ダウンロード
    */
-  private download() {
+  private download(isGrayscale: boolean) {
     // Canvas取得
     const canvas = document.getElementById("canvas") as HTMLCanvasElement; //document.createElement("canvas");
     const ctx = canvas.getContext("2d");
@@ -149,13 +158,13 @@ export default class App extends Vue {
     const pixel = imageData.data;
 
     for (let i = 0, n = pixel.length; i < n; i += 4) {
-      if (pixel1[i + 0] != 255) {
+      if (pixel1[i + 0] != 255 && pixel1[i + 1] != 255 && pixel1[i + 2] != 255) {
         const grayscale =
           pixel1[i] * 0.3 + pixel1[i + 1] * 0.59 + pixel1[i + 2] * 0.11;
-        pixel[i] = grayscale; // 赤
-        pixel[i + 1] = grayscale; // 緑
-        pixel[i + 2] = grayscale; // 青
-        pixel[i + 3] = 255 - grayscale; // アルファ
+        pixel[i] = isGrayscale ? grayscale : pixel1[i]; // 赤
+        pixel[i + 1] = isGrayscale ? grayscale : pixel1[i + 1]; // 緑
+        pixel[i + 2] = isGrayscale ? grayscale : pixel1[i + 2]; // 青
+        pixel[i + 3] = 255; // - grayscale; // アルファ
       } else {
         const grayscale =
           pixel2[i] * 0.3 + pixel2[i + 1] * 0.59 + pixel2[i + 2] * 0.11;
