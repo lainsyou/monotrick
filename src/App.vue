@@ -158,7 +158,7 @@ export default class App extends Vue {
     const pixel = imageData.data;
 
     for (let i = 0, n = pixel.length; i < n; i += 4) {
-      if (pixel1[i + 0] != 255 && pixel1[i + 1] != 255 && pixel1[i + 2] != 255) {
+      if ((pixel1[i + 0] != 255 && pixel1[i + 1] != 255 && pixel1[i + 2] != 255) || pixel1[i + 3] == 0) {
         const grayscale =
           pixel1[i] * 0.3 + pixel1[i + 1] * 0.59 + pixel1[i + 2] * 0.11;
         pixel[i] = isGrayscale ? grayscale : pixel1[i]; // 赤
