@@ -158,20 +158,20 @@ export default class App extends Vue {
     const pixel = imageData.data;
 
     for (let i = 0, n = pixel.length; i < n; i += 4) {
-      if (pixel1[i + 3] != 255) {
-        const grayscale =
-          pixel1[i] * 0.3 + pixel1[i + 1] * 0.59 + pixel1[i + 2] * 0.11;
-        pixel[i] = isGrayscale ? grayscale : pixel1[i]; // 赤
-        pixel[i + 1] = isGrayscale ? grayscale : pixel1[i + 1]; // 緑
-        pixel[i + 2] = isGrayscale ? grayscale : pixel1[i + 2]; // 青
-        pixel[i + 3] = isGrayscale ? 255 : pixel1[i + 3]; // - grayscale; // アルファ
-      } else {
+      if (pixel1[i + 3] == 0) {
         const grayscale =
           pixel2[i] * 0.3 + pixel2[i + 1] * 0.59 + pixel2[i + 2] * 0.11;
         pixel[i] = 255; // 赤
         pixel[i + 1] = 255; // 緑
         pixel[i + 2] = 255; // 青
         pixel[i + 3] = grayscale; // アルファ
+      } else {
+        const grayscale =
+          pixel1[i] * 0.3 + pixel1[i + 1] * 0.59 + pixel1[i + 2] * 0.11;
+        pixel[i] = isGrayscale ? grayscale : pixel1[i]; // 赤
+        pixel[i + 1] = isGrayscale ? grayscale : pixel1[i + 1]; // 緑
+        pixel[i + 2] = isGrayscale ? grayscale : pixel1[i + 2]; // 青
+        pixel[i + 3] = isGrayscale ? 255 : pixel1[i + 3]; // - grayscale; // アルファ
       }
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
