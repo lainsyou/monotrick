@@ -26,16 +26,22 @@
 
       <span>ダウンロード</span>
       <br /><span style="padding-left: 10px">クレースケール：</span>
-      <v-btn icon @click="download(true)">
+      <v-btn icon @click="download(true, false)">
         <v-icon x-large>mdi-download</v-icon>
       </v-btn>
       <br /><span style="padding-left: 10px">不透明部分の色を残す：</span>
-      <v-btn icon @click="download(false)">
+      <v-btn icon @click="download(false, false)">
+        <v-icon x-large>mdi-download</v-icon>
+      </v-btn>
+      <br /><span style="padding-left: 10px">クレースケール（排他）：</span>
+      <v-btn icon @click="download(true, true)">
         <v-icon x-large>mdi-download</v-icon>
       </v-btn>
 
-      <div style="background-color: gray">
-        <span style="color: white; font-weight: bold"
+      <div id="background" style="background-color: gray">
+        <v-btn @click="setBackground('white')">白背景 </v-btn>
+        <v-btn @click="setBackground('black')">黒背景 </v-btn>
+        <span style="color: white; font-weight: bold; color: gray"
           >見えるときのサンプル</span
         >
         <br />
@@ -60,6 +66,10 @@ export default class App extends Vue {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data2!: any;
 
+  private setBackground(color: string) {
+    const back = document.getElementById("background") as HTMLDivElement;
+    back.style.backgroundColor = color;
+  }
   /**
    * ファイルダイアログを開く
    */
@@ -140,7 +150,7 @@ export default class App extends Vue {
   /**
    * ダウンロード
    */
-  private download(isGrayscale: boolean) {
+  private download(isGrayscale: boolean, isExclude: boolean) {
     // Canvas取得
     const canvas = document.getElementById("canvas") as HTMLCanvasElement; //document.createElement("canvas");
     const ctx = canvas.getContext("2d");
@@ -158,20 +168,60 @@ export default class App extends Vue {
     const pixel = imageData.data;
 
     for (let i = 0, n = pixel.length; i < n; i += 4) {
-      if (pixel1[i + 3] == 0) {
-        const grayscale =
-          pixel2[i] * 0.3 + pixel2[i + 1] * 0.59 + pixel2[i + 2] * 0.11;
-        pixel[i] = 255; // 赤
-        pixel[i + 1] = 255; // 緑
-        pixel[i + 2] = 255; // 青
-        pixel[i + 3] = grayscale; // アルファ
+      if (isExclude) {
+        if (
+          pixel1[i + 3] == 0 ||
+          pixel1[i + 0] + pixel1[i + 1] + pixel1[i + 2] == 0
+        ) {
+          if (pixel2[i + 0] + pixel2[i + 1] + pixel2[i + 2] == 255 * 3) {
+            // 真っ白は真っ黒に変更
+            pixel[i] = 255; // 赤
+            pixel[i + 1] = 255; // 緑
+            pixel[i + 2] = 255; // 青
+            pixel[i + 3] = 0; // アルファ
+          } else {
+            const grayscale =
+              pixel2[i] * 0.3 + pixel2[i + 1] * 0.59 + pixel2[i + 2] * 0.11;
+            pixel[i] = 255; // 赤
+            pixel[i + 1] = 255; // 緑
+            pixel[i + 2] = 255; // 青
+            pixel[i + 3] = grayscale; // アルファ
+          }
+        } else {
+          const grayscale =
+            pixel1[i] * 0.3 + pixel1[i + 1] * 0.59 + pixel1[i + 2] * 0.11;
+          pixel[i] = 0; // 赤
+          pixel[i + 1] = 0; // 緑
+          pixel[i + 2] = 0; // 青
+          pixel[i + 3] = 255 - grayscale; // アルファ
+        }
       } else {
-        const grayscale =
-          pixel1[i] * 0.3 + pixel1[i + 1] * 0.59 + pixel1[i + 2] * 0.11;
-        pixel[i] = isGrayscale ? grayscale : pixel1[i]; // 赤
-        pixel[i + 1] = isGrayscale ? grayscale : pixel1[i + 1]; // 緑
-        pixel[i + 2] = isGrayscale ? grayscale : pixel1[i + 2]; // 青
-        pixel[i + 3] = isGrayscale ? 255 : pixel1[i + 3]; // - grayscale; // アルファ
+        if (
+          pixel1[i + 3] == 0 ||
+          pixel1[i + 0] + pixel1[i + 1] + pixel1[i + 2] == 0
+        ) {
+          if (pixel2[i + 0] + pixel2[i + 1] + pixel2[i + 2] == 0) {
+            // 真っ黒は真っ白に変更
+            pixel[i] = 255; // 赤
+            pixel[i + 1] = 255; // 緑
+            pixel[i + 2] = 255; // 青
+            pixel[i + 3] = 255; // アルファ
+          } else {
+            const grayscale =
+              pixel2[i] * 0.3 + pixel2[i + 1] * 0.59 + pixel2[i + 2] * 0.11;
+            pixel[i] = 255; // 赤
+            pixel[i + 1] = 255; // 緑
+            pixel[i + 2] = 255; // 青
+            pixel[i + 3] = grayscale; // アルファ
+          }
+        } else {
+          const grayscale =
+            pixel1[i] * 0.3 + pixel1[i + 1] * 0.59 + pixel1[i + 2] * 0.11;
+          pixel[i + 0] = isGrayscale ? grayscale : pixel1[i + 0]; // 赤
+          pixel[i + 1] = isGrayscale ? grayscale : pixel1[i + 1]; // 緑
+          pixel[i + 2] = isGrayscale ? grayscale : pixel1[i + 2]; // 青
+          pixel[i + 3] = isGrayscale ? 255 : pixel1[i + 3]; // アルファ
+        }
       }
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
