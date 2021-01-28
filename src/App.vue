@@ -172,20 +172,19 @@ export default class App extends Vue {
 
     for (let i = 0, n = pixel.length; i < n; i += 4) {
       if (isExclude) {
-        if (
-          pixel1[i + 3] == 0 ||
-          pixel1[i + 0] + pixel1[i + 1] + pixel1[i + 2] <= allowRange * 3
-        ) {
-          if (pixel2[i + 0] + pixel2[i + 1] + pixel2[i + 2] >= 255 * 3 - allowRange * 3) {
-            // 真っ白は真っ黒に変更
-            pixel[i] = 255; // 赤
+        // || pixel1[i + 0] + pixel1[i + 1] + pixel1[i + 2] <= allowRange * 3
+        if (pixel1[i + 3] == 0) {
+          // pixel2[i + 0] + pixel2[i + 1] + pixel2[i + 2] >= 255 * 3 - allowRange * 3
+          if (pixel2[i + 3] == 0) {
+            // 透過部分は背景化
+            pixel[i + 0] = 255; // 赤
             pixel[i + 1] = 255; // 緑
             pixel[i + 2] = 255; // 青
             pixel[i + 3] = 0; // アルファ
           } else {
             const grayscale =
               pixel2[i] * 0.3 + pixel2[i + 1] * 0.59 + pixel2[i + 2] * 0.11;
-            pixel[i] = 255; // 赤
+            pixel[i + 0] = 255; // 赤
             pixel[i + 1] = 255; // 緑
             pixel[i + 2] = 255; // 青
             pixel[i + 3] = grayscale; // アルファ
@@ -193,26 +192,25 @@ export default class App extends Vue {
         } else {
           const grayscale =
             pixel1[i] * 0.3 + pixel1[i + 1] * 0.59 + pixel1[i + 2] * 0.11;
-          pixel[i] = 0; // 赤
+          pixel[i + 0] = 0; // 赤
           pixel[i + 1] = 0; // 緑
           pixel[i + 2] = 0; // 青
           pixel[i + 3] = 255 - grayscale; // アルファ
         }
       } else {
-        if (
-          pixel1[i + 3] == 0 ||
-          pixel1[i + 0] + pixel1[i + 1] + pixel1[i + 2] <= allowRange * 3
-        ) {
-          if (pixel2[i + 0] + pixel2[i + 1] + pixel2[i + 2] <= allowRange * 3) {
-            // 真っ黒は真っ白に変更
-            pixel[i] = 255; // 赤
+        // || pixel1[i + 0] + pixel1[i + 1] + pixel1[i + 2] <= allowRange * 3
+        if (pixel1[i + 3] == 0) {
+          // pixel2[i + 0] + pixel2[i + 1] + pixel2[i + 2] <= allowRange * 3
+          if (pixel2[i + 3] == 0) {
+            // 透過部分は背景化
+            pixel[i + 0] = 255; // 赤
             pixel[i + 1] = 255; // 緑
             pixel[i + 2] = 255; // 青
             pixel[i + 3] = 255; // アルファ
           } else {
             const grayscale =
               pixel2[i] * 0.3 + pixel2[i + 1] * 0.59 + pixel2[i + 2] * 0.11;
-            pixel[i] = 255; // 赤
+            pixel[i + 0] = 255; // 赤
             pixel[i + 1] = 255; // 緑
             pixel[i + 2] = 255; // 青
             pixel[i + 3] = grayscale; // アルファ
