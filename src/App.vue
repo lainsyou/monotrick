@@ -152,6 +152,8 @@ export default class App extends Vue {
    * 作成
    */
   private create(isGrayscale: boolean, isExclude: boolean) {
+    const allowRange = 0;
+
     // Canvas取得
     const canvas = document.getElementById("canvas") as HTMLCanvasElement; //document.createElement("canvas");
     const ctx = canvas.getContext("2d");
@@ -172,9 +174,9 @@ export default class App extends Vue {
       if (isExclude) {
         if (
           pixel1[i + 3] == 0 ||
-          pixel1[i + 0] + pixel1[i + 1] + pixel1[i + 2] <= 15
+          pixel1[i + 0] + pixel1[i + 1] + pixel1[i + 2] <= allowRange * 3
         ) {
-          if (pixel2[i + 0] + pixel2[i + 1] + pixel2[i + 2] >= 250 * 3) {
+          if (pixel2[i + 0] + pixel2[i + 1] + pixel2[i + 2] >= 255 * 3 - allowRange * 3) {
             // 真っ白は真っ黒に変更
             pixel[i] = 255; // 赤
             pixel[i + 1] = 255; // 緑
@@ -199,9 +201,9 @@ export default class App extends Vue {
       } else {
         if (
           pixel1[i + 3] == 0 ||
-          pixel1[i + 0] + pixel1[i + 1] + pixel1[i + 2] <= 15
+          pixel1[i + 0] + pixel1[i + 1] + pixel1[i + 2] <= allowRange * 3
         ) {
-          if (pixel2[i + 0] + pixel2[i + 1] + pixel2[i + 2] <= 15) {
+          if (pixel2[i + 0] + pixel2[i + 1] + pixel2[i + 2] <= allowRange * 3) {
             // 真っ黒は真っ白に変更
             pixel[i] = 255; // 赤
             pixel[i + 1] = 255; // 緑
