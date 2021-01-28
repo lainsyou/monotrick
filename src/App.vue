@@ -46,7 +46,7 @@
           >見えるときのサンプル</span
         >
         <br />
-        <canvas id="canvas" height="1024" width="1024"></canvas>
+        <canvas id="canvas"></canvas>
       </div>
     </v-main>
   </v-app>
@@ -152,8 +152,6 @@ export default class App extends Vue {
    * 作成
    */
   private create(isGrayscale: boolean, isExclude: boolean) {
-    const allowRange = 0;
-
     // Canvas取得
     const canvas = document.getElementById("canvas") as HTMLCanvasElement; //document.createElement("canvas");
     const ctx = canvas.getContext("2d");
