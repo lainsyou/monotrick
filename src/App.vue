@@ -46,7 +46,7 @@
           >見えるときのサンプル</span
         >
         <br />
-        <canvas id="canvas"></canvas>
+        <canvas id="canvas" width="100%" height="100%"></canvas>
       </div>
     </v-main>
   </v-app>
