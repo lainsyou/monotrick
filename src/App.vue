@@ -172,9 +172,9 @@ export default class App extends Vue {
       if (isExclude) {
         if (
           pixel1[i + 3] == 0 ||
-          pixel1[i + 0] + pixel1[i + 1] + pixel1[i + 2] == 0
+          pixel1[i + 0] + pixel1[i + 1] + pixel1[i + 2] <= 15
         ) {
-          if (pixel2[i + 0] + pixel2[i + 1] + pixel2[i + 2] == 255 * 3) {
+          if (pixel2[i + 0] + pixel2[i + 1] + pixel2[i + 2] >= 250 * 3) {
             // 真っ白は真っ黒に変更
             pixel[i] = 255; // 赤
             pixel[i + 1] = 255; // 緑
@@ -199,9 +199,9 @@ export default class App extends Vue {
       } else {
         if (
           pixel1[i + 3] == 0 ||
-          pixel1[i + 0] + pixel1[i + 1] + pixel1[i + 2] == 0
+          pixel1[i + 0] + pixel1[i + 1] + pixel1[i + 2] <= 15
         ) {
-          if (pixel2[i + 0] + pixel2[i + 1] + pixel2[i + 2] == 0) {
+          if (pixel2[i + 0] + pixel2[i + 1] + pixel2[i + 2] <= 15) {
             // 真っ黒は真っ白に変更
             pixel[i] = 255; // 赤
             pixel[i + 1] = 255; // 緑
