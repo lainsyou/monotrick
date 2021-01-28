@@ -38,7 +38,7 @@
         <v-icon x-large>mdi-auto-fix</v-icon>
       </v-btn>
 
-      <div id="background" style="background-color: gray">
+      <div id="background" style="background-color: gray; width: 100%">
         <v-btn @click="setBackground('white')">白背景 </v-btn>
         <v-btn @click="setBackground('black')">黒背景 </v-btn>
         <v-btn @click="download">ダウンロード</v-btn>
@@ -46,7 +46,7 @@
           >見えるときのサンプル</span
         >
         <br />
-        <canvas id="canvas" height="2048" width="2048"></canvas>
+        <canvas id="canvas" height="2048" width="100%"></canvas>
       </div>
     </v-main>
   </v-app>
