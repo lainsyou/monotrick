@@ -26,21 +26,22 @@
 
       <span>ダウンロード</span>
       <br /><span style="padding-left: 10px">クレースケール：</span>
-      <v-btn icon @click="download(true, false)">
-        <v-icon x-large>mdi-download</v-icon>
+      <v-btn icon @click="create(true, false)">
+        <v-icon x-large>mdi-auto-fix</v-icon>
       </v-btn>
       <br /><span style="padding-left: 10px">不透明部分の色を残す：</span>
-      <v-btn icon @click="download(false, false)">
-        <v-icon x-large>mdi-download</v-icon>
+      <v-btn icon @click="create(false, false)">
+        <v-icon x-large>mdi-auto-fix</v-icon>
       </v-btn>
       <br /><span style="padding-left: 10px">クレースケール（排他）：</span>
-      <v-btn icon @click="download(true, true)">
-        <v-icon x-large>mdi-download</v-icon>
+      <v-btn icon @click="create(true, true)">
+        <v-icon x-large>mdi-auto-fix</v-icon>
       </v-btn>
 
       <div id="background" style="background-color: gray">
         <v-btn @click="setBackground('white')">白背景 </v-btn>
         <v-btn @click="setBackground('black')">黒背景 </v-btn>
+        <v-btn @click="download">ダウンロード</v-btn>
         <span style="color: white; font-weight: bold; color: gray"
           >見えるときのサンプル</span
         >
@@ -148,9 +149,9 @@ export default class App extends Vue {
   }
 
   /**
-   * ダウンロード
+   * 作成
    */
-  private download(isGrayscale: boolean, isExclude: boolean) {
+  private create(isGrayscale: boolean, isExclude: boolean) {
     // Canvas取得
     const canvas = document.getElementById("canvas") as HTMLCanvasElement; //document.createElement("canvas");
     const ctx = canvas.getContext("2d");
@@ -226,6 +227,13 @@ export default class App extends Vue {
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.putImageData(imageData, 0, 0);
+  }
+
+  /**
+   * ダウンロード
+   */
+  private download() {
+    const canvas = document.getElementById("canvas") as HTMLCanvasElement; //document.createElement("canvas");
 
     // BlobオブジェクトにアクセスできるURLを生成
     const base64 = canvas.toDataURL("image/png");
@@ -244,6 +252,7 @@ export default class App extends Vue {
     const link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
     link.download = "monotrick.png";
+    link.target = "_blank";
     link.click();
   }
 }
