@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "precache-manifest.1feec63ea676202b8ad6dfec2016dfcb.js"
+  "precache-manifest.9639b8d0f2961be47305707a49028b81.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "monotrick"});

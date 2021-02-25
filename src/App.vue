@@ -37,6 +37,10 @@
       <v-btn icon @click="create(true, true)">
         <v-icon x-large>mdi-auto-fix</v-icon>
       </v-btn>
+      <br /><span style="padding-left: 10px">モノクロ（排他）：</span>
+      <v-btn icon @click="createMonochrome">
+        <v-icon x-large>mdi-auto-fix</v-icon>
+      </v-btn>
 
       <div id="background" style="background-color: gray; width: 100%">
         <v-btn @click="setBackground('white')">白背景 </v-btn>
@@ -221,6 +225,53 @@ export default class App extends Vue {
           pixel[i + 2] = isGrayscale ? grayscale : pixel1[i + 2]; // 青
           pixel[i + 3] = isGrayscale ? 255 : pixel1[i + 3]; // アルファ
         }
+      }
+    }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.putImageData(imageData, 0, 0);
+  }
+
+  /**
+   * 作成
+   */
+  private createMonochrome() {
+    // Canvas取得
+    const canvas = document.getElementById("canvas") as HTMLCanvasElement; //document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      alert("CanvasRenderingContext2D unsupported.");
+      return;
+    }
+    canvas.width = this.width;
+    canvas.height = this.height;
+
+    const pixel1 = (this.data1 as ImageData).data;
+    const pixel2 = (this.data2 as ImageData).data;
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixel = imageData.data;
+
+    for (let i = 0, n = pixel.length; i < n; i += 4) {
+      // || pixel1[i + 0] + pixel1[i + 1] + pixel1[i + 2] <= allowRange * 3
+      if (pixel1[i + 3] == 0) {
+        // pixel2[i + 0] + pixel2[i + 1] + pixel2[i + 2] >= 255 * 3 - allowRange * 3
+        if (pixel2[i + 3] == 0) {
+          // 透過部分は背景化
+          pixel[i + 0] = 255; // 赤
+          pixel[i + 1] = 255; // 緑
+          pixel[i + 2] = 255; // 青
+          pixel[i + 3] = 0; // アルファ
+        } else {
+          pixel[i + 0] = 255; // 赤
+          pixel[i + 1] = 255; // 緑
+          pixel[i + 2] = 255; // 青
+          pixel[i + 3] = 255; // アルファ
+        }
+      } else {
+        pixel[i + 0] = 0; // 赤
+        pixel[i + 1] = 0; // 緑
+        pixel[i + 2] = 0; // 青
+        pixel[i + 3] = 255; // アルファ
       }
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
